@@ -1,6 +1,7 @@
 import React from 'react';
 import './index.css';
 import LogoText from './assets/images/logotext.png';
+import { useEffect, useState } from 'react';
 
 const Logo = () => {
   return (
@@ -18,7 +19,6 @@ const Search = ({ onSearch }) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData)
-    console.log(data);
     onSearch(data.query);
   };
 
@@ -49,9 +49,53 @@ const Search = ({ onSearch }) => {
 };
 
 function Results({ data }) {
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // useEffect to handle the data fetching based on `data` prop
+  useEffect(() => {
+    if (!data) return; // Avoid making a request if data is empty or undefined
+
+    setLoading(true); // Start loading state
+    fetch(`https://api.jikan.moe/v4/anime?q=${data}&sfw`)
+      .then((response) => response.json())
+      .then((data) => {
+        setResults(data.data); // Store the fetched results in state
+        setLoading(false); // Set loading state to false once data is fetched
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      });
+  }, [data]); // Only re-run the effect if `data` changes
+
+  if (loading) {
+    return <div className='justify-content-center text-center mt-4'><div className="spinner-border text-primary" role="status"></div></div>;
+  }
+
   return (
-    <div className="container justify-content-center text-center mt-4 w-100 bg-danger">
-      <h1>{data ? data : "No results yet"}</h1>
+    <div className="container justify-content-center mt-4 w-100">
+      <h6 className="text-light text-center">
+        Search results for: {data}
+      </h6>
+      <div className='container mt-4'>
+        <div className='row'>
+          {results.length > 0 ? (
+            results.map((anime) => (
+              <div className='col-6 col-sm-4 col-md-4 col-lg-2 mb-3'>
+                <div key={anime.mal_id} className='card border border-primary bg-dark cursor-pointer'>
+                <img src={anime.images.webp.image_url} className="img-thumbnail" alt="Anime" />
+                  <div className='card-body'>
+                    <p className='text-light fs-6 fw-light'>{anime.title_english ? anime.title_english : anime.title}</p>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No results found</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
