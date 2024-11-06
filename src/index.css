@@ -13,3 +13,17 @@
 .cursor-pointer {
   cursor: pointer;
 }
+
+.fs-7 {
+  font-size: 0.80rem !important;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.card-mh {
+  height: 320px !important;
+}
+
+.img-mh {
+  min-height: auto !important;
+}
