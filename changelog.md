@@ -20,3 +20,7 @@
 - November 6, 2024
 - Card Adjustments on Search Results
 - It can now search both Anime and Rating Rx Anime (HAnime)
+
+### v0.1.5
+- November 11, 2024
+- Added Paginations
