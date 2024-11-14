@@ -24,3 +24,7 @@
 ### v0.1.5
 - November 11, 2024
 - Added Paginations
+
+### v0.1.6
+- November 14, 2024
+- On click Anime will now Search but not yet layout or page builded

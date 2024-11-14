@@ -7,16 +7,26 @@ import Components from './main';
 
 const App = () => {
   const [searchData, setSearchData] = useState('');
+  const [selectedAnime, setSelectedAnime] = useState(null);
 
   const handleSearch = (data) => {
     setSearchData(data); // Update state with the input data
+    setSelectedAnime(null);
+  };
+
+  const handleAnimeClick = (id) => {
+    setSelectedAnime(id); // Set the anime ID to fetch details
   };
 
   return (
     <>
       <Components.Logo />
       <Components.Search onSearch={handleSearch} />
-      {searchData && <Components.Results data={searchData} />}
+      {selectedAnime ? (
+        <Components.AnimeInfo id={selectedAnime} /> // Show AnimeInfo when an anime is selected
+      ) : (
+        searchData && <Components.Results data={searchData} onAnimeClick={handleAnimeClick} />
+      )}
     </>
   );
 };

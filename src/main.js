@@ -81,63 +81,56 @@ const Search = ({ onSearch }) => {
   );
 };
 
-function Results({ data }) {
+function Results({ data, onAnimeClick }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1); // Store the current page
-  const [totalPages, setTotalPages] = useState(1);  // Store total pages based on API response
-  const [hasNextPage, setHasNextPage] = useState(false); // Track if there's a next page
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
 
   useEffect(() => {
-    if (!data || !data.query) return; // Avoid making a request if data is empty or undefined
+    if (!data || !data.query) return;
 
     let api;
+    setLoading(true);
 
-    setLoading(true); // Start loading state
-
-    // Construct the API URL based on the anime type and current page
     if (data.animeType === 'anime') {
-      api = `https://api.jikan.moe/v4/anime?q=${data.query}&sfw&page=${currentPage}`; // Add page param
+      api = `https://api.jikan.moe/v4/anime?q=${data.query}&sfw&page=${currentPage}`;
     } else {
-      api = `https://api.jikan.moe/v4/anime?q=${data.query}&rating=rx&page=${currentPage}`; // Add page param
+      api = `https://api.jikan.moe/v4/anime?q=${data.query}&rating=rx&page=${currentPage}`;
     }
 
-    // Make the fetch request
     fetch(api)
       .then((response) => response.json())
       .then((resultData) => {
-        setResults(resultData.data); // Store the fetched results in state
-        setTotalPages(resultData.pagination.last_visible_page); // Set total pages from the API
-        setHasNextPage(resultData.pagination.has_next_page); // Set whether there's a next page
-        setLoading(false); // Stop loading once data is fetched
+        setResults(resultData.data);
+        setTotalPages(resultData.pagination.last_visible_page);
+        setHasNextPage(resultData.pagination.has_next_page);
+        setLoading(false);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
-        setLoading(false); // Stop loading in case of error
+        setLoading(false);
       });
-  }, [data, currentPage]); // Re-fetch when data or currentPage changes
+  }, [data, currentPage]);
 
-  // Handle page change (previous/next)
   const handlePageChange = (page) => {
-    if (page < 1 || page > totalPages) return; // Prevent invalid page numbers
+    if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
   };
 
-  // Handle "Next" page
   const handleNextPage = () => {
     if (hasNextPage) {
       setCurrentPage(currentPage + 1);
     }
   };
 
-  // Handle "Previous" page
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
-  // Calculate the page range to show
   const calculatePageRange = () => {
     const visiblePages = 5;
     const halfVisiblePages = Math.floor(visiblePages / 2);
@@ -145,7 +138,6 @@ function Results({ data }) {
     let startPage = Math.max(1, currentPage - halfVisiblePages);
     let endPage = Math.min(totalPages, currentPage + halfVisiblePages);
 
-    // Adjust if we're close to the start or end
     if (currentPage <= halfVisiblePages) {
       endPage = Math.min(visiblePages, totalPages);
     }
@@ -153,7 +145,6 @@ function Results({ data }) {
       startPage = Math.max(totalPages - visiblePages + 1, 1);
     }
 
-    // Generate an array of page numbers
     return Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
   };
 
@@ -169,18 +160,16 @@ function Results({ data }) {
 
   return (
     <div className="container justify-content-center mt-2 w-100">
-      <h6 className="text-light text-center">
-        Search results for: {data.query}
-      </h6>
+      <h6 className="text-light text-center">Search results for: {data.query}</h6>
       <div className="container mt-4">
         <div className="row">
           {results.length > 0 ? (
             results.map((anime) => (
               <div className="col-6 col-sm-4 col-md-4 col-lg-2 mb-3" key={anime.mal_id}>
-                <div className="card card-mh border border-primary bg-dark cursor-pointer p-1" onClick={() => AnimeInfo(anime.mal_id)}>
+                <div className="card card-mh border border-primary bg-dark cursor-pointer p-1" onClick={() => onAnimeClick(anime.mal_id)}>
                   <img src={anime.images.webp.image_url} className="img-thumbnail img-mh" alt="Anime" />
                   <div className="card-body overflow-hidden">
-                    <p className="text-light fs-7 fw-light">{anime.title_english ? anime.title_english : anime.title}</p>
+                    <p className="text-light fs-7 fw-light">{anime.title_english || anime.title}</p>
                   </div>
                 </div>
               </div>
@@ -188,17 +177,16 @@ function Results({ data }) {
           ) : (
             <h2 className="text-light text-center">No results found.</h2>
           )}
+
           {results.length > 0 && (
             <nav aria-label="Page navigation">
               <ul className="pagination justify-content-center">
-                {/* Previous Button */}
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                   <button className="page-link" onClick={handlePrevPage} disabled={currentPage === 1}>
                     Previous
                   </button>
                 </li>
 
-                {/* Page Number Buttons */}
                 {visiblePages.map((page) => (
                   <li key={page} className={`page-item ${currentPage === page ? 'active' : ''}`}>
                     <button className="page-link" onClick={() => handlePageChange(page)}>
@@ -207,7 +195,6 @@ function Results({ data }) {
                   </li>
                 ))}
 
-                {/* Next Button */}
                 <li className={`page-item ${!hasNextPage ? 'disabled' : ''}`}>
                   <button className="page-link" onClick={handleNextPage} disabled={!hasNextPage}>
                     Next
@@ -223,20 +210,44 @@ function Results({ data }) {
 }
 
 
-function AnimeInfo(id) {
-  console.log(id)
-  fetch(`https://api.jikan.moe/v4/anime/${id}/full`)
-    .then((response) => response.json())
-    .then((resultData) => {
-      console.log(resultData)
-    })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
-    });
+
+function AnimeInfo({ id }) {
+  const [animeDetails, setAnimeDetails] = useState(null);
+
+  useEffect(() => {
+    if (!id) return;
+
+    fetch(`https://api.jikan.moe/v4/anime/${id}/full`)
+      .then((response) => response.json())
+      .then((data) => {
+        setAnimeDetails(data.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching anime info:', error);
+      });
+  }, [id]);
+
+  if (!animeDetails) {
+    return (
+      <div className="text-white text-center">
+        <div className="spinner-border text-primary" role="status"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="anime-info-container">
+      <h2 className="text-light">{animeDetails.title}</h2>
+      <img src={animeDetails.images.jpg.large_image_url} alt={animeDetails.title} />
+      <p className="text-light">{animeDetails.synopsis}</p>
+      {/* You can render other details here */}
+    </div>
+  );
 }
 
+
 const Components = {
-  Logo, Search, Results
+  Logo, Search, Results, AnimeInfo
 };
 
 // Export the variable
