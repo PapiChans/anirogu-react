@@ -28,3 +28,7 @@
 ### v0.1.6
 - November 14, 2024
 - On click Anime will now Search but not yet layout or page builded
+
+### v0.1.7
+- November 19, 2024
+- On click Anime will now Search has built the layout but still incomplete

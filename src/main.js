@@ -236,12 +236,51 @@ function AnimeInfo({ id }) {
   }
 
   return (
-    <div className="anime-info-container">
-      <h2 className="text-light">{animeDetails.title}</h2>
-      <img src={animeDetails.images.jpg.large_image_url} alt={animeDetails.title} />
-      <p className="text-light">{animeDetails.synopsis}</p>
-      {/* You can render other details here */}
-    </div>
+    <>
+      <div className="container">
+      <h4 className="text-light">Anime Full Details</h4>
+        <div className="row">
+          <div className="col-lg-4 col-md-4 col-sm-12 justify-content-center d-flex h-100">
+            <img src={animeDetails.images.webp.large_image_url} className="img-fluid img-res rounded" alt="Anime" />
+          </div>
+          <div className="col-lg-8 col-md-8 col-sm-12 mt-2">
+            <h5 className="text-light">{animeDetails.title_english || animeDetails.title}</h5>
+            <p className="text-light mt-1">Other Names: <span className="text-white-50">{animeDetails.title_english && animeDetails.title_english + " | "} {animeDetails.title || ''} {animeDetails.title_japanese && " | " + animeDetails.title_japanese}</span></p>
+            <p className="text-light mt-1">Type: <span className="text-white-50">{animeDetails.type}</span></p>
+            <p className="text-light mt-1">Source: <span className="text-white-50">{animeDetails.source}</span></p>
+            <p className="text-light mt-1">Total Episodes: <span className="text-white-50">{animeDetails.episodes}</span></p>
+            <p className="text-light mt-1">Status: <span className="text-white-50">{animeDetails.status}</span></p>
+            <p className="text-light mt-1">Aired: <span className="text-white-50">{animeDetails.aired.string}</span></p>
+            <p className="text-light mt-1">Rating: <span className="text-white-50">{animeDetails.rating}</span></p>
+            <p className="text-light mt-1">Season: <span className="text-white-50 text-capitalize">{animeDetails.season} - {animeDetails.year}</span></p>
+            <p className="text-light mt-1">Producers: 
+            {animeDetails.producers.length > 0 ? (
+              animeDetails.producers.map((producer, index) => (
+                <React.Fragment key={producer.mal_id}>
+                  <span className="text-white-50"> {producer.name}</span>
+                  {index < animeDetails.producers.length - 1 && " | "} {}
+                </React.Fragment>
+              ))
+            ) : (
+              <span className="text-white-50"> No producers available</span>
+            )}
+            </p>
+            <p className="text-light mt-1">Studios: 
+            {animeDetails.studios.length > 0 ? (
+              animeDetails.studios.map((studio, index) => (
+                <React.Fragment key={studio.mal_id}>
+                  <span className="text-white-50"> {studio.name}</span>
+                  {index < animeDetails.studios.length - 1 && " | "} {}
+                </React.Fragment>
+              ))
+            ) : (
+              <span className="text-white-50"> No studios available</span>
+            )}
+            </p>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
