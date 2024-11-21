@@ -211,7 +211,7 @@ function Results({ data, onAnimeClick }) {
 
 
 
-function AnimeInfo({ id }) {
+function AnimeInfo({ id, setId }) {
   const [animeDetails, setAnimeDetails] = useState(null);
 
   useEffect(() => {
@@ -246,9 +246,17 @@ function AnimeInfo({ id }) {
           <div className="col-lg-8 col-md-8 col-sm-12 mt-2">
             <h5 className="text-light">{animeDetails.title_english || animeDetails.title}</h5>
             <p className="text-light mt-1">Other Names: <span className="text-white-50">{animeDetails.title_english && animeDetails.title_english + " | "} {animeDetails.title || ''} {animeDetails.title_japanese && " | " + animeDetails.title_japanese}</span></p>
-            <p className="text-light mt-1">Type: <span className="text-white-50">{animeDetails.type}</span></p>
-            <p className="text-light mt-1">Source: <span className="text-white-50">{animeDetails.source}</span></p>
-            <p className="text-light mt-1">Total Episodes: <span className="text-white-50">{animeDetails.episodes}</span></p>
+            <div className="row">
+              <div className="col-4">
+                <p className="text-light mt-1">Type: <span className="text-white-50">{animeDetails.type}</span></p>
+              </div>
+              <div className="col-4">
+                <p className="text-light mt-1">Source: <span className="text-white-50">{animeDetails.source}</span></p>
+              </div>
+              <div className="col-4">
+                <p className="text-light mt-1">Total Episodes: <span className="text-white-50">{animeDetails.episodes}</span></p>
+              </div>
+            </div>
             <p className="text-light mt-1">Status: <span className="text-white-50">{animeDetails.status}</span></p>
             <p className="text-light mt-1">Aired: <span className="text-white-50">{animeDetails.aired.string}</span></p>
             <p className="text-light mt-1">Rating: <span className="text-white-50">{animeDetails.rating}</span></p>
@@ -277,6 +285,61 @@ function AnimeInfo({ id }) {
               <span className="text-white-50"> No studios available</span>
             )}
             </p>
+            <p className="text-light mt-1">Genres: 
+            {animeDetails.genres.length > 0 ? (
+              animeDetails.genres.map((genre, index) => (
+                <React.Fragment key={genre.mal_id}>
+                  <div className="badge badge-info bg-info mx-1"> {genre.name}</div>
+                  {index < animeDetails.genres.length - 1 && " "} {}
+                </React.Fragment>
+              ))
+            ) : (
+              <span className="text-white-50"> No Genres available</span>
+            )}
+            </p>
+            <p className="text-light mt-1">Themes: 
+            {animeDetails.themes.length > 0 ? (
+              animeDetails.themes.map((theme, index) => (
+                <React.Fragment key={theme.mal_id}>
+                  <div className="badge badge-info bg-info mx-1"> {theme.name}</div>
+                  {index < animeDetails.themes.length - 1 && " "} {}
+                </React.Fragment>
+              ))
+            ) : (
+              <span className="text-white-50"> No Themes available</span>
+            )}
+            </p>
+          </div>
+        </div>
+        <div className="row mt-2">
+          <div className="col-lg-6 col-md-6 col-md-12">
+            <h4 className="text-light">Synopsis</h4>
+            <p className="text-white-50">{animeDetails.synopsis ? animeDetails.synopsis : "No synopsis available"}</p>
+          </div>
+          <div className="col-lg-6 col-md-6 col-md-12">
+          <h4 className="text-light">Relations</h4>
+            {animeDetails.relations.length > 0 ? (
+                animeDetails.relations.map((relation, index) => (
+                  <React.Fragment key={relation.mal_id}>
+
+                      {relation.entry.map((entryItem, entryIndex) => {
+
+                        return (
+                          <div className="card mb-2 rounded border border-secondary bg-dark cursor-pointer p-3" onClick={() => setId(entryItem.mal_id)}>
+                            <p className="text-light">{relation.relation}</p>
+                            <div key={entryItem.mal_id}>
+                              <p className="text-white-50">{entryItem.name}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                    {index < animeDetails.relations.length - 1 && " "} {}
+                  </React.Fragment>
+                ))
+              ) : (
+                <span className="text-white-50"> No Relations available</span>
+              )}
           </div>
         </div>
       </div>

@@ -32,3 +32,7 @@
 ### v0.1.7
 - November 19, 2024
 - On click Anime will now Search has built the layout but still incomplete
+
+### v0.1.8
+- November 21, 2024
+- Added Sypnosis and Relations Sections

@@ -23,7 +23,7 @@ const App = () => {
       <Components.Logo />
       <Components.Search onSearch={handleSearch} />
       {selectedAnime ? (
-        <Components.AnimeInfo id={selectedAnime} /> // Show AnimeInfo when an anime is selected
+        <Components.AnimeInfo id={selectedAnime} setId={setSelectedAnime} /> // Show AnimeInfo when an anime is selected
       ) : (
         searchData && <Components.Results data={searchData} onAnimeClick={handleAnimeClick} />
       )}
