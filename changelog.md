@@ -36,3 +36,7 @@
 ### v0.1.8
 - November 21, 2024
 - Added Sypnosis and Relations Sections
+
+### v0.1.8.5
+- November 22, 2024
+- Add Character Section (Unfinished)

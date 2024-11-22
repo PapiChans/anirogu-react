@@ -213,21 +213,34 @@ function Results({ data, onAnimeClick }) {
 
 function AnimeInfo({ id, setId }) {
   const [animeDetails, setAnimeDetails] = useState(null);
+  const [animeCharacters, setAnimeCharacters] = useState(null);
 
   useEffect(() => {
     if (!id) return;
 
-    fetch(`https://api.jikan.moe/v4/anime/${id}/full`)
-      .then((response) => response.json())
-      .then((data) => {
-        setAnimeDetails(data.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching anime info:', error);
-      });
+    // Create an async function to fetch both API calls sequentially
+    const fetchAnimeData = async () => {
+      try {
+        // Fetch anime details
+        const animeDetailsResponse = await fetch(`https://api.jikan.moe/v4/anime/${id}/full`);
+        const animeDetailsData = await animeDetailsResponse.json();
+        setAnimeDetails(animeDetailsData.data);
+
+        // Fetch anime characters
+        const animeCharactersResponse = await fetch(`https://api.jikan.moe/v4/anime/${id}/characters`);
+        const animeCharactersData = await animeCharactersResponse.json();
+        setAnimeCharacters(animeCharactersData.data);
+
+      } catch (error) {
+        console.error('Error fetching anime info or characters:', error);
+      }
+    };
+
+    // Call the function to fetch the data
+    fetchAnimeData();
   }, [id]);
 
-  if (!animeDetails) {
+  if (!animeDetails || !animeCharacters) {
     return (
       <div className="text-white text-center">
         <div className="spinner-border text-primary" role="status"></div>
@@ -341,6 +354,33 @@ function AnimeInfo({ id, setId }) {
                 <span className="text-white-50"> No Relations available</span>
               )}
           </div>
+        </div>
+        <div className="mt-1">
+        <h4 className="text-light">Characters</h4>
+        {animeCharacters === null ? (
+            <span className="text-white-50">Loading characters...</span>
+          ) : (
+            animeCharacters.length > 0 ? (
+              animeCharacters.map((character) => (
+                <div key={character.character.mal_id} className="card mb-2 rounded border border-secondary bg-dark cursor-pointer p-3">
+                  <p className="text-light">{character.character.name}</p>
+                  <div>
+                    {character.voice_actors && character.voice_actors.length > 0 ? (
+                      character.voice_actors.map((voice_actor, index) => (
+                        <div key={voice_actor.person.mal_id}>
+                          <p className="text-white-50">{voice_actor.person.name} ({voice_actor.language})</p>
+                        </div>
+                      ))
+                    ) : (
+                      <span className="text-white-50">No voice actors available</span>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <span className="text-white-50">No characters available</span>
+            )
+          )}
         </div>
       </div>
     </>
