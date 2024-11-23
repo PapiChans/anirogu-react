@@ -33,9 +33,10 @@
 }
 
 .rel-img {
-  max-height: 100px !important;
-  max-width: 70px !important;
+  max-height: 150px !important;
+  max-width: 100px !important;
 }
+
 
 @media only screen and (max-width: 767px) {
 .img-res {

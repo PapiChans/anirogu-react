@@ -6,7 +6,7 @@
 | ------------------- | --------------------|
 | **Description**     | AniRogu alternate system using React.JS |
 | **Project Started**    | November 2, 2024 |
-| **Current Version** | v0.1.8.5| 
+| **Current Version** | v0.1.9| 
 
 
 ## Technologies Used for this Application

@@ -40,3 +40,8 @@
 ### v0.1.8.5
 - November 22, 2024
 - Add Character Section (Unfinished)
+
+### v0.1.9
+- November 23, 2024
+- Add Character Section (Finished)
+- Adjust .rel-img class in CSS

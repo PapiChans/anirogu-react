@@ -356,31 +356,41 @@ function AnimeInfo({ id, setId }) {
           </div>
         </div>
         <div className="mt-1">
-        <h4 className="text-light">Characters</h4>
-        {animeCharacters === null ? (
-            <span className="text-white-50">Loading characters...</span>
-          ) : (
-            animeCharacters.length > 0 ? (
-              animeCharacters.map((character) => (
-                <div key={character.character.mal_id} className="card mb-2 rounded border border-secondary bg-dark cursor-pointer p-3">
-                  <p className="text-light">{character.character.name}</p>
-                  <div>
-                    {character.voice_actors && character.voice_actors.length > 0 ? (
-                      character.voice_actors.map((voice_actor, index) => (
-                        <div key={voice_actor.person.mal_id}>
-                          <p className="text-white-50">{voice_actor.person.name} ({voice_actor.language})</p>
+          <h4 className="text-light">Characters</h4>
+          <div className="row justify-content-center">
+            {animeCharacters === null ? (
+                <span className="text-white-50">Loading characters...</span>
+              ) : (
+                animeCharacters.length > 0 ? (
+                  animeCharacters.map((character) => (
+                    <div key={character.character.mal_id} className="card mb-2 rounded border border-secondary bg-dark cursor-pointer p-3 col-lg-5 col-md-5 col-sm-5 mx-1">
+                      <div className="row align-content-center align-items-center">
+                        <div className="col-lg-4 col-md-4 col-sm-12">
+                          <div className="d-flex justify-content-center">
+                            <img src={character.character.images.jpg.image_url} className="img-fluid rel-img align-content-center justify-content-center" alt="Char pic" />
+                          </div>
+                        <p className="text-light text-center">{character.character.name}</p>
                         </div>
-                      ))
-                    ) : (
-                      <span className="text-white-50">No voice actors available</span>
-                    )}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <span className="text-white-50">No characters available</span>
-            )
-          )}
+                        <div className="col-lg-8 col-md-8 col-sm-12">
+                          <p className="text-light">Voice Casts:</p>
+                          {character.voice_actors && character.voice_actors.length > 0 ? (
+                            character.voice_actors.map((voice_actor, index) => (
+                              <div key={voice_actor.person.mal_id}>
+                                <p className="text-white-50">{voice_actor.person.name} ({voice_actor.language})</p>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-white-50">No voice actors available</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <span className="text-white-50">No characters available</span>
+                )
+              )}
+          </div>
         </div>
       </div>
     </>
